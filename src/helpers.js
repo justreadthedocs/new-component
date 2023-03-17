@@ -133,9 +133,16 @@ module.exports.logConclusion = () => {
 
 module.exports.logError = (error) => {
   console.info('\n');
-  console.info(
-    chalk.bold.rgb(...colors.red)('Error creating component.')
-  );
+  console.info(chalk.bold.rgb(...colors.red)('Error creating component.'));
   console.info(chalk.rgb(...colors.red)(error));
   console.info('\n');
+};
+
+module.exports.componentNameToKebabCase = (str) => {
+  const regex = /(?:(?=[A-Z])(?<![A-Z]))|(?=[A-Z](?=[^A-Z\s]))/g;
+
+  return str
+    .split(regex)
+    .map((delimetedStr) => delimetedStr.toLowerCase())
+    .join('-');
 };
