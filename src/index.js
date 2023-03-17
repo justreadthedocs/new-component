@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { program } = require('commander');
+const { program, Option } = require('commander');
 
 const {
   getConfig,
@@ -12,6 +12,7 @@ const {
   logItemCompletion,
   logConclusion,
   logError,
+  componentNameToKebabCase,
 } = require('./helpers');
 const {
   requireOptional,
@@ -45,6 +46,14 @@ program
     'Path to the "components" directory (default: "src/components")',
     config.dir
   )
+  .addOption(
+    new Option(
+      '-c, --case <namingConvention>',
+      'Naming convention for directory and file names'
+    )
+      .choices(['kebab'])
+      .default(config.case, 'same as <componentName>')
+  )
   .parse(process.argv);
 
 const [componentName] = program.args;
@@ -57,15 +66,24 @@ const indexExtension = options.lang === 'js' ? 'js' : 'ts';
 // Find the path to the selected template file.
 const templatePath = `./templates/${options.lang}.js`;
 
+let componentFileName = '';
+switch (options.case) {
+  case 'kebab':
+    componentFileName = componentNameToKebabCase(componentName);
+    break;
+  default:
+    componentFileName = componentName;
+}
+
 // Get all of our file paths worked out, for the user's project.
-const componentDir = `${options.dir}/${componentName}`;
-const filePath = `${componentDir}/${componentName}.${fileExtension}`;
+const componentDir = `${options.dir}/${componentFileName}`;
+const filePath = `${componentDir}/${componentFileName}.${fileExtension}`;
 const indexPath = `${componentDir}/index.${indexExtension}`;
 
 // Our index template is super straightforward, so we'll just inline it for now.
 const indexTemplate = prettify(`\
-export * from './${componentName}';
-export { default } from './${componentName}';
+export * from './${componentFileName}';
+export { default } from './${componentFileName}';
 `);
 
 logIntro({

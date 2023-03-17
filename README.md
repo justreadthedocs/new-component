@@ -110,6 +110,17 @@ Command line: `--dir <value>` or `-d <value>`
 JSON config: `{ "dir": <value> }`
 <br />
 
+### Naming convention
+
+Allows to use different convention for directory and file names. Options are `kebab`. Defaults to the same style as the component name.
+
+**Usage:**
+
+Command line: `--case <value>` or `-c <value>`
+
+JSON config: `{ "case": <value> }`
+<br />
+
 ## Platform Support
 
 This has only been tested in macOS. I think it'd work fine in linux, but I haven't tested it. Windows is a big question mark.
